@@ -26,4 +26,8 @@ export  interface configTypes{
     
 }
 
-export type corsOptionsType = { origin:string }
+export type corsOptionsType = {
+    origin: string,
+      methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: boolean,
+}

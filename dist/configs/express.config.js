@@ -10,7 +10,11 @@ const cors_1 = __importDefault(require("cors"));
 const configkeys_1 = __importDefault(require("./configkeys"));
 const express_session_1 = __importDefault(require("express-session"));
 const passport_1 = __importDefault(require("passport"));
-const corsOptions = { origin: (0, configkeys_1.default)().ORIGIN };
+const corsOptions = {
+    origin: (0, configkeys_1.default)().ORIGIN,
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true,
+};
 const expressConfig = (app) => {
     app.use((0, cors_1.default)(corsOptions)),
         app.use((0, morgan_1.default)('dev')),

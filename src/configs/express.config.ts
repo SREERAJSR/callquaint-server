@@ -10,7 +10,11 @@ import passport from 'passport';
   
          
   
-const corsOptions:corsOptionsType = { origin: configKey().ORIGIN};
+const corsOptions: corsOptionsType = {
+  origin: configKey().ORIGIN,
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true,
+};
  
 const expressConfig = (app: Application) => {
  
