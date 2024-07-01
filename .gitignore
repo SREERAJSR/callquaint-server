@@ -1,0 +1,9 @@
+#ignore nodemdules
+node_modules/
+
+
+#ignore .env file
+.env
+
+#ignore compiled js files
+dist/
