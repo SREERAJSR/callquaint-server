@@ -126,7 +126,7 @@ exports.refreshAccessToken = (0, express_async_handler_1.default)((req, res, nex
             throw new AppError_1.default('Invalid refresh token', http_statuscodes_1.default.UNAUTHORIZED);
         if (incomingRefreshToken !== (user === null || user === void 0 ? void 0 : user.refreshToken))
             throw new AppError_1.default("Refresh token is expired or used", http_statuscodes_1.default.UNAUTHORIZED);
-        const { accessToken, refreshToken: newRefreshToken } = yield (0, user_services_1.generateAcessTokenAndrefreshToken)(user._id);
+        const { accessToken } = yield (0, user_services_1.generateAccessToken)(user._id);
         const options = {
             httpOnly: true,
             secure: (0, configkeys_1.default)().NODE_ENV === "production",
@@ -134,8 +134,7 @@ exports.refreshAccessToken = (0, express_async_handler_1.default)((req, res, nex
         res
             .status(200)
             .cookie("accessToken", accessToken, options)
-            .cookie("refreshToken", newRefreshToken, options)
-            .json(new ApiReponse_1.default(http_statuscodes_1.default.OK, { accessToken, refreshToken: newRefreshToken }, "Access token refreshed"));
+            .json(new ApiReponse_1.default(http_statuscodes_1.default.OK, { accessToken }, "Access token refreshed"));
     }
     catch (error) {
         throw new AppError_1.default("Invalid refresh token", http_statuscodes_1.default.UNAUTHORIZED);

@@ -25,3 +25,17 @@ export const generateAcessTokenAndrefreshToken = async (userId: string | undefin
     }
 }
 
+
+export const generateAccessToken = async(userId: string):Promise<{accessToken:string}> => {
+    try {
+        const user = await User.findById(new mongoose.Types.ObjectId(userId));
+
+        const accessToken = await user?.generateAccessToken()
+        if (accessToken) {
+            return {accessToken}
+        }
+        throw new AppError("Unable to generate access token for the user", HttpStatus.INTERNAL_SERVER_ERROR);
+    } catch (error) {
+ throw new AppError("Something went wrong while generating the accesstoken ", HttpStatus.INTERNAL_SERVER_ERROR);        
+    }
+}

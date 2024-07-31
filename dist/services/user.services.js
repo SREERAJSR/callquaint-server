@@ -12,10 +12,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.generateAcessTokenAndrefreshToken = void 0;
+exports.generateAccessToken = exports.generateAcessTokenAndrefreshToken = void 0;
 const user_model_1 = __importDefault(require("../models/user.model"));
 const AppError_1 = __importDefault(require("../utils/AppError"));
 const http_statuscodes_1 = __importDefault(require("../types/constants/http-statuscodes"));
+const mongoose_1 = __importDefault(require("mongoose"));
 const generateAcessTokenAndrefreshToken = (userId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const user = yield user_model_1.default.findById(userId);
@@ -34,3 +35,17 @@ const generateAcessTokenAndrefreshToken = (userId) => __awaiter(void 0, void 0, 
     }
 });
 exports.generateAcessTokenAndrefreshToken = generateAcessTokenAndrefreshToken;
+const generateAccessToken = (userId) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const user = yield user_model_1.default.findById(new mongoose_1.default.Types.ObjectId(userId));
+        const accessToken = yield (user === null || user === void 0 ? void 0 : user.generateAccessToken());
+        if (accessToken) {
+            return { accessToken };
+        }
+        throw new AppError_1.default("Unable to generate access token for the user", http_statuscodes_1.default.INTERNAL_SERVER_ERROR);
+    }
+    catch (error) {
+        throw new AppError_1.default("Something went wrong while generating the accesstoken ", http_statuscodes_1.default.INTERNAL_SERVER_ERROR);
+    }
+});
+exports.generateAccessToken = generateAccessToken;

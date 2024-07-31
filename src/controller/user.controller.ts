@@ -8,7 +8,7 @@ import configKey from "../configs/configkeys";
 import sendEmail from "../utils/create-email";
 import { SocialLoginEnums, UserRolesEnum } from "../types/constants/common.constant";
 import ApiResponse from "../utils/ApiReponse";
-import { generateAcessTokenAndrefreshToken } from "../services/user.services";
+import { generateAccessToken, generateAcessTokenAndrefreshToken } from "../services/user.services";
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import { GoogleAuthenticatedUserInterface } from "../types/model/usermodel.interface";
 import uuid from 'uuid';
@@ -111,8 +111,8 @@ export const refreshAccessToken = asyncHandler(async (req: Request, res: Respons
       if (!user) throw new AppError('Invalid refresh token', HttpStatus.UNAUTHORIZED);
       if (incomingRefreshToken !== user?.refreshToken)
          throw new AppError("Refresh token is expired or used", HttpStatus.UNAUTHORIZED);
-      const { accessToken, refreshToken: newRefreshToken } =
-         await generateAcessTokenAndrefreshToken(user._id);
+      const { accessToken } = await generateAccessToken(user._id)
+      
          const options = {
       httpOnly: true,
       secure:configKey().NODE_ENV === "production",
@@ -120,11 +120,10 @@ export const refreshAccessToken = asyncHandler(async (req: Request, res: Respons
       res
       .status(200)
       .cookie("accessToken", accessToken, options)
-      .cookie("refreshToken", newRefreshToken, options)
       .json(
         new ApiResponse(
           HttpStatus.OK,
-          { accessToken, refreshToken: newRefreshToken },
+          { accessToken},
           "Access token refreshed"
         )
       );
